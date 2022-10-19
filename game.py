@@ -50,7 +50,7 @@ while running:
             clouds.add(new_cloud)
             all_sprites.add(new_cloud)
 
-    #  Keys the keys pressed
+    #  Get the keys pressed
     pressed_keys = pygame.key.get_pressed()
     player.update(pressed_keys)
 
