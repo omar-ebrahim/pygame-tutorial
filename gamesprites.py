@@ -4,15 +4,16 @@ from pygame.locals import (
     K_UP,
     K_DOWN,
     K_LEFT,
-    K_RIGHT
+    K_RIGHT,
+    RLEACCEL
 )
 
 
 class Player(pygame.sprite.Sprite):  # The player class inherits the Sprite class
     def __init__(self, screen_width, screen_height) -> None:
         super(Player, self).__init__()
-        self.surf = pygame.Surface((75, 25))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("jet.png").convert()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -43,11 +44,12 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.surf = pygame.Surface((20, 10))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load("missile.png").convert()
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
-                random.randint(self.screen_width + 20, self.screen_width + 100),
+                random.randint(self.screen_width + 20,
+                               self.screen_width + 100),
                 random.randint(0, self.screen_height),
             )
         )
@@ -57,5 +59,25 @@ class Enemy(pygame.sprite.Sprite):
     # Remove it when it passes the left edge of the screen
     def update(self):
         self.rect.move_ip(-self.speed, 0)
+        if self.rect.right < 0:
+            self.kill()
+
+class Cloud(pygame.sprite.Sprite):
+    def __init__(self, screen_width, screen_height):
+        super(Cloud, self).__init__()
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.surf = pygame.image.load("cloud.png").convert()
+        self.surf.set_colorkey((0,0,0), RLEACCEL)
+        self.rect = self.surf.get_rect(
+            center=(
+                random.randint(self.screen_width + 20,
+                               self.screen_width + 100),
+                random.randint(0, self.screen_height),
+            )
+        )
+    
+    def update(self):
+        self.rect.move_ip(-5, 0)
         if self.rect.right < 0:
             self.kill()
